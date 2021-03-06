@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Contracts.Models;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Models
 {
@@ -14,7 +16,9 @@ namespace Repository.Models
 
         public async Task<IEnumerable<LaptopBrand>> GetAllLaptopBrands(bool trackChanges)
         {
-            throw new System.NotImplementedException();
+            return await FindAll(trackChanges)
+                .OrderBy(lb => lb.Cost)
+                .ToListAsync();
         }
     }
 }
