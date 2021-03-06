@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using AutoMapper;
 using Entities.DataTransferObjects.LaptopBrand;
+using Entities.Models;
 
 namespace SimpleComputerShopAPI.Controllers
 {
-    [Route("api/shop")]
+    [Route("api/shop/laptops")]
     [ApiController]
     public class ShopController : ControllerBase
     {
@@ -33,6 +34,14 @@ namespace SimpleComputerShopAPI.Controllers
                 Success = true,
                 Message = "ab"
             });*/
+        }
+
+        [HttpGet("config_options")]
+        public async Task<IActionResult> GetLaptopConfigurationItems()
+        {
+            var options = await _repository.LaptopConfigurationItem.GetLaptopConfigurationItems(trackChanges: false);
+            var optionsToReturn = _mapper.Map<IEnumerable<LaptopConfigurationItem>>(options);
+            return Ok(optionsToReturn);
         }
 
         [HttpGet("{id}")]
