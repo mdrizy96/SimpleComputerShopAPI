@@ -1,4 +1,6 @@
-﻿using Contracts.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Contracts.Models;
 using Entities;
 using Entities.Models;
 
@@ -8,6 +10,11 @@ namespace Repository.Models
     {
         public LaptopBrandRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
+        }
+
+        public async Task<IEnumerable<LaptopBrand>> GetAllLaptopBrands(bool trackChanges)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

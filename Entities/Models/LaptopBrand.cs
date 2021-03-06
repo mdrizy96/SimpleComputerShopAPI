@@ -10,5 +10,7 @@ namespace Entities.Models
 
         [Required(ErrorMessage = "BrandName is a required field.")]
         public string BrandName { get; set; }
+        [Required]
+        public long Cost { get; set; }
     }
 }
