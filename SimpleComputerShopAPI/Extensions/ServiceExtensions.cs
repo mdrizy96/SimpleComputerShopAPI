@@ -4,6 +4,7 @@ using LoggerService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Repository;
 
 namespace SimpleComputerShopAPI.Extensions
 {
@@ -25,5 +26,7 @@ namespace SimpleComputerShopAPI.Extensions
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
             services.AddDbContext<RepositoryContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("ComputerShopConnection"), b => b.MigrationsAssembly("SimpleComputerShopAPI")));
+
+        public static void ConfigureRepositoryManager(this IServiceCollection services) => services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 }
