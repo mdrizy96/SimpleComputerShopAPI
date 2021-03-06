@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using AutoMapper;
 using Contracts;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using AutoMapper;
+using Entities.DataTransferObjects.ConfigurationCost;
 using Entities.DataTransferObjects.LaptopBrand;
-using Entities.Models;
+using Entities.DataTransferObjects.LaptopConfigurationItem;
+using Entities.ResponseModel;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SimpleComputerShopAPI.Controllers
 {
@@ -29,40 +31,33 @@ namespace SimpleComputerShopAPI.Controllers
             var brands = await _repository.LaptopBrand.GetAllLaptopBrands(trackChanges: false);
             var brandsToReturn = _mapper.Map<IEnumerable<LaptopBrandDto>>(brands);
             return Ok(brandsToReturn);
-            /*return Ok(new ResponseDetails
-            {
-                Success = true,
-                Message = "ab"
-            });*/
         }
 
         [HttpGet("config_options")]
         public async Task<IActionResult> GetLaptopConfigurationItems()
         {
             var options = await _repository.LaptopConfigurationItem.GetLaptopConfigurationItems(trackChanges: false);
-            var optionsToReturn = _mapper.Map<IEnumerable<LaptopConfigurationItem>>(options);
+            var optionsToReturn = _mapper.Map<IEnumerable<LaptopConfigurationItemDto>>(options);
             return Ok(optionsToReturn);
         }
 
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("config_options/{configurationItemId}/costs")]
+        public async Task<IActionResult> GetConfigurationCostsOfItem(int configurationItemId)
         {
-            return "value";
-        }
+            var configurationItem =
+                await _repository.LaptopConfigurationItem.GetSingleLaptopConfigurationItem(configurationItemId, false);
+            if (configurationItem == null)
+            {
+                return NotFound(new ResponseDetails
+                {
+                    Success = false,
+                    Message = "Configuration item not found"
+                });
+            }
 
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var configCosts = await _repository.ConfigurationCost.GetAllConfigurationCostsOfItem(configurationItemId, trackChanges: false);
+            var configCostsToReturn = _mapper.Map<IEnumerable<ConfigurationCostDto>>(configCosts);
+            return Ok(configCostsToReturn);
         }
     }
 }

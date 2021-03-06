@@ -2,6 +2,7 @@
 using Entities.DataTransferObjects.LaptopBrand;
 using Entities.Models;
 using System;
+using Entities.DataTransferObjects.ConfigurationCost;
 using Entities.DataTransferObjects.LaptopConfigurationItem;
 
 namespace SimpleComputerShopAPI.Profiles
@@ -12,6 +13,9 @@ namespace SimpleComputerShopAPI.Profiles
         {
             CreateMap<LaptopBrand, LaptopBrandDto>()
                 .ForMember(a => a.Cost, opt => opt.MapFrom(b => Convert.ToDecimal(b.Cost) / 100));
+            
+            CreateMap<ConfigurationCost, ConfigurationCostDto>()
+                .ForMember(cc => cc.Cost, opt => opt.MapFrom(b => Convert.ToDecimal(b.Cost) / 100));
 
             CreateMap<LaptopConfigurationItem, LaptopConfigurationItemDto>();
         }

@@ -20,5 +20,11 @@ namespace Repository.Models
                 .OrderBy(lci => lci.ItemName)
                 .ToListAsync();
         }
+
+        public async Task<LaptopConfigurationItem> GetSingleLaptopConfigurationItem(int configurationItemId, bool trackChanges)
+        {
+            return await FindByCondition(lci => lci.ConfigurationItemId.Equals(configurationItemId), trackChanges)
+                .SingleOrDefaultAsync();
+        }
     }
 }

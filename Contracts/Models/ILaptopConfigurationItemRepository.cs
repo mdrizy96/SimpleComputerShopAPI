@@ -7,5 +7,6 @@ namespace Contracts.Models
     public interface ILaptopConfigurationItemRepository
     {
         Task<IEnumerable<LaptopConfigurationItem>> GetLaptopConfigurationItems(bool trackChanges);
+        Task<LaptopConfigurationItem> GetSingleLaptopConfigurationItem(int configurationItemId, bool trackChanges);
     }
 }
