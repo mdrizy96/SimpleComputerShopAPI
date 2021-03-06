@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Configuration;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities
@@ -16,6 +17,9 @@ namespace Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new LaptopBrandConfiguration());
+            modelBuilder.ApplyConfiguration(new LaptopConfigurationItemConfiguration());
+            modelBuilder.ApplyConfiguration(new ConfigurationCostConfiguration());
 
             modelBuilder.Entity<LaptopBrand>(entity =>
             {
@@ -37,7 +41,7 @@ namespace Entities
             {
                 entity.HasKey(e => e.ConfigurationCostId);
 
-                entity.HasIndex(e => e.ConfigurationItemId)
+                entity.HasIndex(e => new { e.ConfigurationItemId, e.Option})
                     .IsUnique();
             });
         }

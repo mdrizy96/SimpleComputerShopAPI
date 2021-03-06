@@ -2,15 +2,17 @@
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace SimpleComputerShopAPI.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20210306053551_UpdateUniqueConstraintConfigCost")]
+    partial class UpdateUniqueConstraintConfigCost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,50 +44,6 @@ namespace SimpleComputerShopAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("ConfigurationCosts");
-
-                    b.HasData(
-                        new
-                        {
-                            ConfigurationCostId = 1,
-                            ConfigurationItemId = 1,
-                            Cost = 4567L,
-                            Option = "8 GB"
-                        },
-                        new
-                        {
-                            ConfigurationCostId = 2,
-                            ConfigurationItemId = 1,
-                            Cost = 8788L,
-                            Option = "16 GB"
-                        },
-                        new
-                        {
-                            ConfigurationCostId = 3,
-                            ConfigurationItemId = 2,
-                            Cost = 12334L,
-                            Option = "500 GB"
-                        },
-                        new
-                        {
-                            ConfigurationCostId = 4,
-                            ConfigurationItemId = 2,
-                            Cost = 20000L,
-                            Option = "1 TB"
-                        },
-                        new
-                        {
-                            ConfigurationCostId = 5,
-                            ConfigurationItemId = 3,
-                            Cost = 5076L,
-                            Option = "Red"
-                        },
-                        new
-                        {
-                            ConfigurationCostId = 6,
-                            ConfigurationItemId = 3,
-                            Cost = 3456L,
-                            Option = "Blue"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.LaptopBrand", b =>
@@ -106,23 +64,6 @@ namespace SimpleComputerShopAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("LaptopBrands");
-
-                    b.HasData(
-                        new
-                        {
-                            BrandId = 1,
-                            BrandName = "Dell"
-                        },
-                        new
-                        {
-                            BrandId = 2,
-                            BrandName = "Toshiba"
-                        },
-                        new
-                        {
-                            BrandId = 3,
-                            BrandName = "HP"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.LaptopConfigurationItem", b =>
@@ -143,23 +84,6 @@ namespace SimpleComputerShopAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("LaptopConfigurationItems");
-
-                    b.HasData(
-                        new
-                        {
-                            ConfigurationItemId = 1,
-                            ItemName = "Ram"
-                        },
-                        new
-                        {
-                            ConfigurationItemId = 2,
-                            ItemName = "HDD"
-                        },
-                        new
-                        {
-                            ConfigurationItemId = 3,
-                            ItemName = "Colour"
-                        });
                 });
 #pragma warning restore 612, 618
         }
