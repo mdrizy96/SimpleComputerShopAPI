@@ -4,6 +4,7 @@ using System.Diagnostics;
 using APITests.Helpers;
 using AutoMapper;
 using Contracts;
+using Entities.DataTransferObjects.ConfigurationCost;
 using Entities.DataTransferObjects.LaptopBrand;
 using Entities.DataTransferObjects.LaptopConfigurationItem;
 using Entities.Models;
@@ -89,9 +90,7 @@ namespace APITests
             Assert.IsType<OkObjectResult>(okResult);
         }
 
-        // [Theory(DisplayName = "Add New Learning Resource")]
         [Fact(DisplayName = "2. Get laptop brands returns list of all laptop brands")]
-        // [Trait("Learning Resource Tests", "Adding LR")]
         public async void Get_WhenCalled_LaptopBrands_ReturnsAllLaptopBrands()
         {
             // Arrange
@@ -140,5 +139,58 @@ namespace APITests
                 Assert.Equal(3, items.Count);
             }
         }
+
+        [Theory(DisplayName = "5. Get configuration costs of item returns Ok result")]
+        [Trait("Configuration Costs", "5. Get configuration costs of item returns Ok result")]
+        [InlineData(1)]
+        public async void Get_WhenCalled_ConfigurationCost_ReturnsOkResult(int configurationItemId)
+        {
+            // Arrange
+            var controller = NewConfigurationCostsShopController(configurationItemId);
+
+            // Act
+            var okResult = await controller.GetConfigurationCostsOfItem(configurationItemId);
+
+            // Assert
+            Assert.IsType<OkObjectResult>(okResult);
+        }
+
+        [Theory(DisplayName = "6. Get configuration costs of non existent item returns NotFound result")]
+        [Trait("Configuration Costs", "6. Get configuration costs of non existent item returns NotFound result")]
+        [InlineData(10)]
+        public async void Get_UnknownConfigItemIdPassed_ConfigurationCost_ReturnsNotFoundResult(int configurationItemId)
+        {
+            // Arrange
+            var controller = NewConfigurationCostsShopController(configurationItemId);
+
+            // Act
+            var okResult = await controller.GetConfigurationCostsOfItem(configurationItemId);
+
+            // Assert
+            Assert.IsType<NotFoundObjectResult>(okResult);
+        }
+
+        [Theory(DisplayName = "7. Get configuration costs of existing item returns right item")]
+        [Trait("Configuration Costs", "7. Get configuration costs of existing item returns right item")]
+        [InlineData(2)]
+        public async void Get_ValidConfigItemIdPassed_ConfigurationCost_ReturnsRightItem(int configurationItemId)
+        {
+            // Arrange
+            var controller = NewConfigurationCostsShopController(configurationItemId);
+
+            // Act
+            var okResult = await controller.GetConfigurationCostsOfItem(configurationItemId) as OkObjectResult;
+
+            // Assert
+            if (okResult != null)
+            {
+                var items = Assert.IsType<List<ConfigurationCostDto>>(okResult.Value);
+                Assert.NotNull(items);
+                Assert.NotEmpty(items);
+                Assert.All(items, item => item.ConfigurationItemId.Equals(configurationItemId));
+                // Assert.Equal(configurationItemId, ((ConfigurationCostDto) okResult.Value).ConfigurationItemId);
+            }
+        }
     }
+
 }
