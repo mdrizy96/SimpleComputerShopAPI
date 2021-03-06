@@ -5,6 +5,7 @@ using APITests.Helpers;
 using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects.LaptopBrand;
+using Entities.DataTransferObjects.LaptopConfigurationItem;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -39,12 +40,11 @@ namespace APITests
             // Arrange
             var mockRepo = new Mock<IRepositoryManager>();
             var mockLogger = new Mock<ILoggerManager>();
-            var mockMapper = new Mock<IMapper>();
 
             mockRepo.Setup(repo => repo.LaptopConfigurationItem.GetLaptopConfigurationItems(false))
                 .ReturnsAsync(testData.GetLaptopConfigurationItems());
 
-            return new ShopController(mockRepo.Object, mockLogger.Object, mockMapper.Object);
+            return new ShopController(mockRepo.Object, mockLogger.Object, _mapper);
         }
 
         public ShopController NewConfigurationCostsShopController(int configurationItemId)
@@ -54,7 +54,6 @@ namespace APITests
             // Arrange
             var mockRepo = new Mock<IRepositoryManager>();
             var mockLogger = new Mock<ILoggerManager>();
-            var mockMapper = new Mock<IMapper>();
 
             mockRepo.Setup(repo => repo.LaptopConfigurationItem.GetSingleLaptopConfigurationItem(configurationItemId, false))
                 .ReturnsAsync(testData.GetSingleLaptopConfigurationItem(configurationItemId));
@@ -62,7 +61,7 @@ namespace APITests
             mockRepo.Setup(repo => repo.ConfigurationCost.GetAllConfigurationCostsOfItem(configurationItemId, false))
                 .ReturnsAsync(testData.GetAllConfigurationCostsOfItem(configurationItemId));
 
-            return new ShopController(mockRepo.Object, mockLogger.Object, mockMapper.Object);
+            return new ShopController(mockRepo.Object, mockLogger.Object, _mapper);
         }
         public void TestsAutomapperInitialize()
         {
@@ -90,7 +89,9 @@ namespace APITests
             Assert.IsType<OkObjectResult>(okResult);
         }
 
+        // [Theory(DisplayName = "Add New Learning Resource")]
         [Fact(DisplayName = "2. Get laptop brands returns list of all laptop brands")]
+        // [Trait("Learning Resource Tests", "Adding LR")]
         public async void Get_WhenCalled_LaptopBrands_ReturnsAllLaptopBrands()
         {
             // Arrange
@@ -103,8 +104,39 @@ namespace APITests
             if (okResult != null)
             {
                 var items = Assert.IsType<List<LaptopBrandDto>>(okResult.Value);
-                Trace.WriteLine(items.ToString());
                 Assert.NotNull(items);
+                Assert.Equal(3, items.Count);
+            }
+        }
+
+        [Fact(DisplayName = "3. Get laptop configuration items returns Ok result")]
+        public async void Get_WhenCalled_LaptopConfigurationItem_ReturnsOkResult()
+        {
+            // Arrange
+            var controller = NewLaptopConfigurationItemShopController();
+
+            // Act
+            var okResult = await controller.GetLaptopConfigurationItems();
+
+            // Assert
+            Assert.IsType<OkObjectResult>(okResult);
+        }
+        
+        [Fact(DisplayName = "4. Get laptop configuration items returns list of all possible config items")]
+        public async void Get_WhenCalled_LaptopConfigurationItem_ReturnsAllLaptopConfigurationItems()
+        {
+            // Arrange
+            var controller = NewLaptopConfigurationItemShopController();
+
+            // Act
+            var okResult = await controller.GetLaptopConfigurationItems() as OkObjectResult;
+
+            // Assert
+            if (okResult != null)
+            {
+                var items = Assert.IsType<List<LaptopConfigurationItemDto>>(okResult.Value);
+                Assert.NotNull(items);
+                Assert.NotEmpty(items);
                 Assert.Equal(3, items.Count);
             }
         }
