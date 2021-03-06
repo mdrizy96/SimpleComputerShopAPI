@@ -48,6 +48,7 @@ namespace SimpleComputerShopAPI.Controllers
                 await _repository.LaptopConfigurationItem.GetSingleLaptopConfigurationItem(configurationItemId, false);
             if (configurationItem == null)
             {
+                _logger.LogError($"Configuration item with id: {configurationItemId} not found in database");
                 return NotFound(new ResponseDetails
                 {
                     Success = false,
